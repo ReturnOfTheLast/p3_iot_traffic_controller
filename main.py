@@ -16,15 +16,23 @@ if __name__ != "__main__":
 
 import os
 
-if os.getuid != 0:
+if os.getuid() != 0:
     raise Exception("Script need to be run as root, please do so")
     exit(1)
 
-import logging
+from queuemanager.core import FrameQueue
+from sniffer.handlers import FramePublisher
+from logger import get_module_logger
 import argparse
 
-parser = argparse.ArgumentParser
-parser.add_argument("-i", "--interface", type=str, default=None)
+logger = get_module_logger(__name__)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-i', '--interface', type=str, default=None, dest='iface')
 args = parser.parse_args()
 
-logging.basicConfig(filename="traffic_controller.log", level=logging.INFO)
+sniffer = FramePublisher()
+frame_queue = FrameQueue(sniffer)
+
+logger.info(f"Starting sniffer on {args.iface if args.iface else 'all'}")
+sniffer.listen(args.iface)
