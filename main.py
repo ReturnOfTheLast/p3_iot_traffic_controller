@@ -34,5 +34,5 @@ args = parser.parse_args()
 sniffer = FramePublisher()
 frame_queue = FrameQueue(sniffer)
 
-logger.info(f"Starting sniffer on {args.iface if args.iface else 'all'}")
+logger.info("Starting sniffer")
 sniffer.listen(args.iface)
