@@ -4,22 +4,22 @@
 # Inspired by and burrowing from https://github.com/EONRaider/Packet-Sniffer
 
 from sniffer.core import Sniffer
-from logger import get_module_logger
+from logger import get_logger
 from abc import ABC, abstractmethod
-
-logger = get_module_logger(__name__)
 
 
 class FramePublisher:
     def __init__(self):
         self._subscribers = list()
+        self.logger = get_logger(
+            f"{self.__module__}.{self.__class__.__qualname__}")
 
     def register(self, subscriber) -> None:
-        logger.info(f"Registering {subscriber}")
+        self.logger.info(f"Registering {subscriber}")
         self._subscribers.append(subscriber)
 
     def _notify_all(self, *args, **kwargs) -> None:
-        logger.info("Notifying all subscribers")
+        self.logger.info("Notifying all subscribers")
         [subscriber.update(*args, **kwargs)
             for subscriber in self._subscribers]
 

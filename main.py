@@ -22,10 +22,10 @@ if os.getuid() != 0:
 
 from queuemanager.core import FrameQueue
 from sniffer.handlers import FramePublisher
-from logger import get_module_logger
+from logger import get_logger
 import argparse
 
-logger = get_module_logger(__name__)
+logger = get_logger(__name__)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--interface', type=str, default=None, dest='iface')

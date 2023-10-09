@@ -5,11 +5,11 @@ import logging
 import sys
 
 
-def get_module_logger(mod_name):
-    logger = logging.getLogger(mod_name)
+def get_logger(name):
+    logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
 
-    log_format = "{name:<20s} {levelname:>8s}: {message}"
+    log_format = "{name:<32s} {levelname:>8s}: {message}"
 
     log_file_handler = logging.FileHandler('log_file.log')
     log_file_format = "{asctime:<25s}" + log_format
