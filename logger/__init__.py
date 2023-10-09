@@ -9,7 +9,7 @@ def get_logger(name):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
 
-    log_format = "{name:<32s} {levelname:>8s}: {message}"
+    log_format = "{name:<35s} {levelname:>8s}: {message}"
 
     log_file_handler = logging.FileHandler('log_file.log')
     log_file_format = "{asctime:<25s}" + log_format
