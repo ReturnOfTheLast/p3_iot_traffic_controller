@@ -15,23 +15,21 @@ class FramePublisher:
         self._subscribers = list()
 
     def register(self, subscriber) -> None:
-        logger.debug(f"Registering {subscriber}")
+        logger.info(f"Registering {subscriber}")
         self._subscribers.append(subscriber)
 
     def _notify_all(self, *args, **kwargs) -> None:
-        logger.debug("Notifying all subscribers")
+        logger.info("Notifying all subscribers")
         [subscriber.update(*args, **kwargs)
             for subscriber in self._subscribers]
 
     def listen(self, interface: str) -> None:
         for frame in Sniffer(interface).execute():
-            logger.debug(f"New frame: {frame}")
             self._notify_all(frame)
 
 
 class FrameSubscriber(ABC):
     def __init__(self, publisher: FramePublisher):
-        logger.debug("Self registering with publisher")
         publisher.register(self)
 
     @abstractmethod

@@ -12,7 +12,8 @@ class FrameQueue(FrameSubscriber, Queue):
     def __init__(self, publisher: FramePublisher, maxsize=0):
         FrameSubscriber.__init__(self, publisher)
         Queue.__init__(self, maxsize)
+        logger.info("Frame Queue created")
 
     def update(self, frame) -> None:
-        logger.debug(f"Adding new frame to the Queue: {frame}")
         self.put_nowait(frame)
+        logger.info(f"Frame Queue: ~{self.qsize()} elements")
