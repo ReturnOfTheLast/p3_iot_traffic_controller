@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
-# Inspired by and burrowing from https://github.com/EONRaider/Packet-Sniffer
-
 __author__ = "Akse0402 (Aksel), Benjo (Benjamin), Kayeon (Jonathan), and \
 ReturnOfTheLast (Marcus)"
 __credits__ = ["Akse0402 (Aksel)",
@@ -12,22 +10,21 @@ __credits__ = ["Akse0402 (Aksel)",
 __version__ = "0.1-dev"
 __status__ = "Development"
 
-from sniffer.core import PacketQueueHandler
+if __name__ != "__main__":
+    raise Exception("Importing this file is not allowed")
+    exit(1)
+
 import os
+
+if os.getuid != 0:
+    raise Exception("Script need to be run as root, please do so")
+    exit(1)
+
 import logging
-import queue
+import argparse
 
-logging.basicConfig(filename="traffic_controller.log", level=logging.ERROR)
+parser = argparse.ArgumentParser
+parser.add_argument("-i", "--interface", type=str, default=None)
+args = parser.parse_args()
 
-packet_queue = queue.Queue()
-snifferHandler = PacketQueueHandler()
-
-if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser
-    parser.add_argument("-i", "--interface", type=str, default=None)
-    args = parser.parse_args()
-
-    if os.getuid != 0:
-        logging.error("Invalid permissions, please run as root")
-        exit(1)
+logging.basicConfig(filename="traffic_controller.log", level=logging.INFO)
