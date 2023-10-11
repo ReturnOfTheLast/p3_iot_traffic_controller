@@ -9,8 +9,9 @@ from abc import ABC, abstractmethod
 
 
 class FramePublisher:
-    def __init__(self):
+    def __init__(self, sniffer: Sniffer):
         self._subscribers = list()
+        self._sniffer = sniffer
         self.logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
 
@@ -23,8 +24,8 @@ class FramePublisher:
         [subscriber.update(*args, **kwargs)
             for subscriber in self._subscribers]
 
-    def listen(self, interface: str) -> None:
-        for frame in Sniffer(interface).execute():
+    def start(self) -> None:
+        for frame in self._sniffer.execute():
             self._notify_all(frame)
 
 
