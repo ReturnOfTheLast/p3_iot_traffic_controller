@@ -1,13 +1,15 @@
 from netprotocols import Ethernet, IPv4, TCP, UDP, Protocol
 
+
 def dissect(frame: bytes) -> dict[str, Protocol]:
     output = {}
     output['Ethernet'] = Ethernet.decode(frame)
 
     def get_next_layer(current: str, rhl: int) -> tuple[str, int] | None:
-        if hasattr(output[current], 'encapsulated_proto'):
-            next = output[current].encapsulated_proto
-            hl = output[current].ihl if hasattr(output[current], 'ihl') else output[current].header_len
+        c_proto: Protocol = output[current]
+        if hasattr(c_proto, 'encapsulated_proto'):
+            next = c_proto.encapsulated_proto
+            hl = c_proto.ihl if hasattr(c_proto, 'ihl') else c_proto.header_len
             output[next] = globals()[next].decode(frame[hl+rhl:])
             return next, hl
         return None
