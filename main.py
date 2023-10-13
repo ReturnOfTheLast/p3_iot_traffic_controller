@@ -11,14 +11,12 @@ __version__ = "0.1-dev"
 __status__ = "Development"
 
 if __name__ != "__main__":
-    raise Exception("Importing this file is not allowed")
-    exit(1)
+    raise ImportError("Importing this file is not allowed")
 
 import os
 
 if os.getuid() != 0:
-    raise Exception("Script need to be run as root, please do so")
-    exit(1)
+    raise PermissionError("Script need to be run as root, please do so")
 
 from queuemanager.core import FrameQueue
 from sniffer.core import Sniffer
