@@ -10,17 +10,35 @@ import itertools
 
 
 class Sniffer:
+    """A frame-sniffer
+    """
+
     def __init__(self, interface: str):
+        """Sniffer constructor
+
+        Args:
+            interface (str): Interface to sniff on
+        """
         self.interface = interface
         self.logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
 
     def _bind_interface(self, sock: socket):
+        """Internal method to bind the socket to interface
+
+        Args:
+            sock (socket): socket to bind
+        """
         if self.interface is not None:
             self.logger.info(f"Binding interface to {self.interface}")
             sock.bind((self.interface, 0))
 
     def execute(self) -> Iterator:
+        """Sniff for frames and yield them
+
+        Yields:
+            tuple[int, bytes]: Frame number and frame bytes
+        """
         with socket(PF_PACKET, SOCK_RAW, ntohs(0x0003)) as sock:
             self._bind_interface(sock)
             self.logger.info("Listening for frames")

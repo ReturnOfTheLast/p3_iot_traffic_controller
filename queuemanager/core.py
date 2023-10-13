@@ -7,13 +7,27 @@ from queue import Queue
 
 
 class FrameQueue(FrameSubscriber, Queue):
-    def __init__(self, publisher: FramePublisher, maxsize=0):
+    """Queue object to hold frame from a sniffer
+    """
+
+    def __init__(self, publisher: FramePublisher, maxsize: int = 0):
+        """FrameQueue constructor
+
+        Args:
+            publisher (FramePublisher): Publisher to subscribe to
+            maxsize (int): Max size of the queue
+        """
         FrameSubscriber.__init__(self, publisher)
         Queue.__init__(self, maxsize)
         self.logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
         self.logger.info("Frame Queue created")
 
-    def update(self, frame) -> None:
+    def update(self, frame: tuple[int, bytes]):
+        """Update method called by publisher
+
+        Args:
+            frame (tuple[int, bytes]): Frame to add to queue
+        """
         self.put_nowait(frame)
         self.logger.info(f"Frame Queue: ~{self.qsize()} elements")

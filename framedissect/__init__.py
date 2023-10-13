@@ -2,10 +2,28 @@ from netprotocols import Ethernet, IPv4, TCP, UDP, Protocol
 
 
 def dissect(frame: bytes) -> dict[str, Protocol]:
+    """Dissect a frame
+
+    Args:
+        frame (bytes): Frame to dissect
+
+    Returns:
+        dict[str, Protocol]: Dictionary of protocols
+    """
     output = {}
     output['Ethernet'] = Ethernet.decode(frame)
 
     def get_next_layer(current: str, rhl: int) -> tuple[str, int] | None:
+        """Unwrap the next layer of the frame
+
+        Args:
+            current (str): Name of current protocol
+            rhl (int): Running header length
+
+        Returns:
+            tuple[str, int] | None: Name of the next protocol \
+            and header_len thereof
+        """
         c_proto: Protocol = output[current]
         if hasattr(c_proto, 'encapsulated_proto'):
             next = c_proto.encapsulated_proto
