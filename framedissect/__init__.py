@@ -1,7 +1,7 @@
-from netprotocols import Ethernet, IPv4, TCP, UDP, Protocol
+from netprotocols import Ethernet, IPv4, IPv6, TCP, UDP, Protocol
 
 
-def dissect(frame: bytes) -> dict[str, Protocol]:
+def dissect(frame: bytes) -> tuple[int, dict[str, Protocol]]:
     """Dissect a frame
 
     Args:
@@ -25,12 +25,12 @@ def dissect(frame: bytes) -> dict[str, Protocol]:
             and header_len thereof
         """
         c_proto: Protocol = output[current]
-        if hasattr(c_proto, 'encapsulated_proto'):
-            next = c_proto.encapsulated_proto
-            hl = c_proto.ihl if hasattr(c_proto, 'ihl') else c_proto.header_len
-            output[next] = globals()[next].decode(frame[hl+rhl:])
-            return next, hl
-        return None
+        if c_proto.encapsulated_proto in (None, "undefined"):
+            return None
+        next = c_proto.encapsulated_proto
+        hl = c_proto.ihl if hasattr(c_proto, 'ihl') else c_proto.header_len
+        output[next] = globals()[next].decode(frame[hl+rhl:])
+        return next, hl
 
     rhl: int = 0
     current: str = 'Ethernet'
@@ -43,4 +43,4 @@ def dissect(frame: bytes) -> dict[str, Protocol]:
         current: str = out[0]
         rhl += out[1]
 
-    return output
+    return rhl, output
