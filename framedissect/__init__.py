@@ -1,4 +1,17 @@
-from netprotocols import Ethernet, IPv4, IPv6, TCP, UDP, Protocol
+#!/usr/bin/env python3
+# https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
+
+from netprotocols import (
+    Protocol,
+    Ethernet,
+    IPv4,
+    IPv6,
+    ICMPv4,
+    ICMPv6,
+    TCP,
+    UDP,
+    ARP
+)
 
 
 def dissect(frame: bytes) -> tuple[int, dict[str, Protocol]]:
@@ -44,3 +57,13 @@ def dissect(frame: bytes) -> tuple[int, dict[str, Protocol]]:
         rhl += out[1]
 
     return rhl, output
+
+
+def __fthelinter__():
+    IPv4
+    IPv6
+    ICMPv4
+    ICMPv6
+    TCP
+    UDP
+    ARP
