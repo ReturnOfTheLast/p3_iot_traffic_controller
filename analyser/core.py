@@ -1,6 +1,7 @@
 #!/usr/bin//env python3
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
+from logger import get_logger
 from framedissect import dissect
 from queuemanager.core import FrameQueue
 import re
@@ -10,6 +11,8 @@ class Analyser:
 
     def __init__(self):
         self.frame = FrameQueue.get()
+        self.logger = get_logger(
+            f"{self.__module__}.{self.__class__.__qualname__}")
 
     def layer(self):
         self.framedic = dissect(self.frame[1])
