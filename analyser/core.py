@@ -6,23 +6,28 @@ from framedissect import dissect
 from queuemanager.core import FrameQueue
 import re
 
+ip_pattern: str = r'^10\.10\.0\.[0-9]*$'
+
 
 class Analyser:
 
-    def __init__(self):
-        self.frame = FrameQueue.get()
+    def __init__(self, frame_queue: FrameQueue):
+        self.frame_queue = frame_queue
         self.logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
 
-    def layer(self):
+    def next_frame(self):
+        self.frame = self.frame_queue.get()
         self.framedic = dissect(self.frame[1])
 
-    def traffic_flow(self):
-
+    def analyse(self):
         if 'IPv4' in self.framedic[1].keys():
-            if re.match(r'^10\.10\.0\.[0-9]*$', self.framedic[1]['IPv4'].src):
-                packet = self.frame[1][self.framedic[0]:]
+            if re.match(ip_pattern, self.framedic[1]['IPv4'].src):
+                data = self.frame[1][self.framedic[0]:]
+                self.logger.debug(f"Data: {data}")
+            else:
+                self.logger.info("Source is not from network... ignoring")
 
         else:
-            print('IPv4 is not found.')
-            print(f'Packet keys are:{self.framedic[1].keys()}')
+            self.logger.info("Couldn't find IPv4")
+            self.logger.debug(f"The protocols were {self.framedic[1].keys()}")
