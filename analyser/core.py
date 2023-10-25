@@ -4,14 +4,16 @@
 from logger import get_logger
 from framedissect import dissect
 from queuemanager.core import FrameQueue
+from commander.handlers import CommandPublisher
 import re
 
 ip_pattern: str = r'^10\.10\.0\.[0-9]*$'
 
 
-class Analyser:
+class Analyser(CommandPublisher):
 
     def __init__(self, frame_queue: FrameQueue):
+        CommandPublisher.__init__(self)
         self.frame_queue = frame_queue
         self.logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
@@ -25,6 +27,7 @@ class Analyser:
             if re.match(ip_pattern, self.framedic[1]['IPv4'].src):
                 data = self.frame[1][self.framedic[0]:]
                 self.logger.debug(f"Data: {data}")
+                # TODO: Do something with the data
             else:
                 self.logger.info("Source is not from network... ignoring")
 
