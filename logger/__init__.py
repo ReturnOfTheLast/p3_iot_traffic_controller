@@ -24,7 +24,7 @@ def get_logger(name: str) -> Logger:
         Logger: The logger
     """
     logger: Logger = getLogger(name)
-    logger.setLevel(DEBUG if environ["DEBUG"] else INFO)
+    logger.setLevel(DEBUG if environ.get("DEBUG") else INFO)
 
     log_format: str = "{name:<35s} {levelname:>8s}: {message}"
 

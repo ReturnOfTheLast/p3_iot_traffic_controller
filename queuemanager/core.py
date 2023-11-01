@@ -1,27 +1,23 @@
 #!/usr/bin/env python3
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
-from sniffer.handlers import FramePublisher, FrameSubscriber
-from commander.handlers import CommandPublisher, CommandSubscriber
-from logger import get_logger
+from pubsub.core import Publisher, Subscriber
 from queue import Queue
 
 
-class FrameQueue(FrameSubscriber, Queue):
+class FrameQueue(Subscriber, Queue):
     """Queue object to hold frame from a sniffer
     """
 
-    def __init__(self, publisher: FramePublisher, maxsize: int = 0):
+    def __init__(self, publisher: Publisher, maxsize: int = 0):
         """FrameQueue constructor
 
         Args:
             publisher (FramePublisher): Publisher to subscribe to
             maxsize (int): Max size of the queue
         """
-        FrameSubscriber.__init__(self, publisher)
+        Subscriber.__init__(self, [publisher])
         Queue.__init__(self, maxsize)
-        self.logger = get_logger(
-            f"{self.__module__}.{self.__class__.__qualname__}")
         self.logger.info("Frame Queue created")
 
     def update(self, frame: tuple[int, bytes]):
@@ -34,12 +30,10 @@ class FrameQueue(FrameSubscriber, Queue):
         self.logger.info(f"Frame Queue: ~{self.qsize()} elements")
 
 
-class CommandQueue(CommandSubscriber, Queue):
-    def __init__(self, publishers: list[CommandPublisher], maxsize: int = 0):
-        CommandSubscriber.__init__(self, publishers)
+class CommandQueue(Subscriber, Queue):
+    def __init__(self, publishers: list[Publisher], maxsize: int = 0):
+        Subscriber.__init__(self, publishers)
         Queue.__init__(self, maxsize)
-        self.logger = get_logger(
-            f"{self.__module__}.{self.__class__.__qualname__}")
         self.logger.info("Command Queue created")
 
     def update(self, command: dict[str, str | int | bool]):

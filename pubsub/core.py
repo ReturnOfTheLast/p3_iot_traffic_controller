@@ -9,22 +9,22 @@ from logging import Logger
 from abc import ABC, abstractmethod
 
 
-class FramePublisher:
-    """A class for publishing frames
+class Publisher:
+    """A class for publishing
     """
 
     def __init__(self):
-        """FramePublisher constructor
+        """Publisher constructor
         """
-        self._subscribers: list[FrameSubscriber] = list()
-        self.logger: Logger = get_logger(
+        self._subscribers: list[Subscriber] = list()
+        self.logger:  Logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
 
-    def register(self, subscriber: FrameSubscriber):
+    def register(self, subscriber: Subscriber):
         """Register subscriber
 
         Args:
-            subscriber (FrameSubscriber): Subscriber
+            subscriber (Subscriber): Subscriber
         """
         self.logger.info(f"Registering {subscriber}")
         self._subscribers.append(subscriber)
@@ -33,32 +33,37 @@ class FramePublisher:
         """Internal method to notify all subscribers
 
         Args:
-            args: List of arguments
-            kwargs: Dictionary of keyword arguments
+            args: Arguments
+            kwargs: Keyword Arguments
         """
         self.logger.info("Notifying all subscribers")
+        self.logger.debug(f"Notification: \n{args}\n{kwargs}")
         [subscriber.update(*args, **kwargs)
             for subscriber in self._subscribers]
 
 
-class FrameSubscriber(ABC):
-    """Abstract class to subscribe to a FramePublisher
+class Subscriber(ABC):
+    """Abstract class to subscribe to Publishers
     """
 
-    def __init__(self, publisher: FramePublisher):
-        """FrameSubscriber constructor
+    def __init__(self, publishers: list[Publisher]):
+        """Subscriber constructor
 
         Args:
-            publisher (FramePublisher): Publisher to subscribe to
+            publishers (list[Publisher]): Publishers to subscribe to
         """
-        publisher.register(self)
+        self.logger:  Logger = get_logger(
+            f"{self.__module__}.{self.__class__.__qualname__}")
+
+        for publisher in publishers:
+            publisher.register(self)
 
     @abstractmethod
     def update(self, *args, **kwargs):
         """Update method to get new data
 
         Args:
-            args: List of arguments
-            kwargs: Dictionary of keyword argument
+            args: Arguments
+            kwargs: Keyword Argument
         """
         ...

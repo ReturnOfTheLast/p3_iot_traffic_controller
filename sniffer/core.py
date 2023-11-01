@@ -3,15 +3,12 @@
 
 # Inspired by and burrowing from https://github.com/EONRaider/Packet-Sniffer
 
-from logger import get_logger
-from sniffer.handlers import FramePublisher
+from pubsub.core import Publisher
 from socket import PF_PACKET, SOCK_RAW, ntohs, socket
-from typing import Iterator
-from logging import Logger
 import itertools
 
 
-class Sniffer(FramePublisher):
+class Sniffer(Publisher):
     """A frame-sniffer
     """
 
@@ -21,10 +18,8 @@ class Sniffer(FramePublisher):
         Args:
             interface (str): Interface to sniff on
         """
-        FramePublisher.__init__(self)
+        Publisher.__init__(self)
         self.interface: str = interface
-        self.logger:  Logger = get_logger(
-            f"{self.__module__}.{self.__class__.__qualname__}")
 
     def _bind_interface(self, sock: socket):
         """Internal method to bind the socket to interface
