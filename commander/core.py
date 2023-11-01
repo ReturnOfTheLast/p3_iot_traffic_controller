@@ -22,7 +22,7 @@ class Commander:
             comment="Security Chain for Filtering"
         )
         self.logger.info("Attaching chain to FORWARD...")
-        self.tables["filter"]["FORWARD"].insert(Jump(self.sec_chain), 0)
+        self.tables["filter"]["FORWARD"].insert(0, Jump(self.sec_chain))
 
     def run(self):
         while True:
