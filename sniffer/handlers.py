@@ -6,6 +6,7 @@
 from __future__ import annotations
 from sniffer.core import Sniffer
 from logger import get_logger
+from logging import Logger
 from abc import ABC, abstractmethod
 
 
@@ -19,9 +20,9 @@ class FramePublisher:
         Args:
             sniffer (Sniffer): Sniffer to use
         """
-        self._subscribers = list()
-        self._sniffer = sniffer
-        self.logger = get_logger(
+        self._subscribers: list[FrameSubscriber] = list()
+        self._sniffer: Sniffer = sniffer
+        self.logger: Logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
 
     def register(self, subscriber: FrameSubscriber):

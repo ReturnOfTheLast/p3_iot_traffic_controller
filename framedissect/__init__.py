@@ -23,8 +23,8 @@ def dissect(frame: bytes) -> tuple[int, dict[str, Protocol]]:
     Returns:
         dict[str, Protocol]: Dictionary of protocols
     """
-    output = {}
-    output['Ethernet'] = Ethernet.decode(frame)
+    output: dict[str, Protocol] = dict()
+    output['Ethernet']: Protocol = Ethernet.decode(frame)
 
     def get_next_layer(current: str, rhl: int) -> tuple[str, int] | None:
         """Unwrap the next layer of the frame
@@ -40,15 +40,15 @@ def dissect(frame: bytes) -> tuple[int, dict[str, Protocol]]:
         c_proto: Protocol = output[current]
         if c_proto.encapsulated_proto in (None, "undefined"):
             return None
-        next = c_proto.encapsulated_proto
-        hl = c_proto.ihl if hasattr(c_proto, 'ihl') else c_proto.header_len
-        output[next] = globals()[next].decode(frame[hl+rhl:])
+        next: str = c_proto.encapsulated_proto
+        hl: int = c_proto.ihl if hasattr(c_proto, 'ihl') else c_proto.header_len
+        output[next]: Protocol = globals()[next].decode(frame[hl+rhl:])
         return next, hl
 
     rhl: int = 0
     current: str = 'Ethernet'
     while True:
-        out = get_next_layer(current, rhl)
+        out: tuple[str, int] = get_next_layer(current, rhl)
 
         if out is None:
             break

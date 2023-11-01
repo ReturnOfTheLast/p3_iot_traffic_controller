@@ -6,7 +6,7 @@
 from __future__ import annotations
 from logger import get_logger
 from abc import ABC, abstractmethod
-
+from logging import Logger
 
 class CommandPublisher:
     """Handle sniffer and publish frames
@@ -15,8 +15,8 @@ class CommandPublisher:
     def __init__(self):
         """CommandPublisher constructor
         """
-        self._subscribers = list()
-        self.logger = get_logger(
+        self._subscribers: list[CommandSubscriber] = list()
+        self.logger: Logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
 
     def register(self, subscriber: CommandSubscriber):

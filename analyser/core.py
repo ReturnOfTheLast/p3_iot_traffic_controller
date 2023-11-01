@@ -5,6 +5,8 @@ from logger import get_logger
 from framedissect import dissect
 from queuemanager.core import FrameQueue
 from commander.handlers import CommandPublisher
+from logging import Logger
+from netprotocols import Protocol
 import re
 
 ip_pattern: str = r'^10\.10\.0\.[0-9]*$'
@@ -14,18 +16,18 @@ class Analyser(CommandPublisher):
 
     def __init__(self, frame_queue: FrameQueue):
         CommandPublisher.__init__(self)
-        self.frame_queue = frame_queue
-        self.logger = get_logger(
+        self.frame_queue: FrameQueue = frame_queue
+        self.logger: Logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
 
     def next_frame(self):
-        self.frame = self.frame_queue.get()
-        self.framedic = dissect(self.frame[1])
+        self.frame: tuple[int, bytes] = self.frame_queue.get()
+        self.framedic: tuple[int, dict[str, Protocol]] = dissect(self.frame[1])
 
     def analyse(self):
         if 'IPv4' in self.framedic[1].keys():
             if re.match(ip_pattern, self.framedic[1]['IPv4'].src):
-                data = self.frame[1][self.framedic[0]:]
+                data: bytes = self.frame[1][self.framedic[0]:]
                 self.logger.debug(f"Data: {data}")
                 # TODO: Do something with the data
             else:

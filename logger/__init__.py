@@ -21,18 +21,18 @@ def get_logger(name: str) -> Logger:
     Returns:
         Logger: The logger
     """
-    logger = getLogger(name)
+    logger: Logger = getLogger(name)
     logger.setLevel(INFO)
 
-    log_format = "{name:<35s} {levelname:>8s}: {message}"
+    log_format: str = "{name:<35s} {levelname:>8s}: {message}"
 
-    log_file_handler = FileHandler('log_file.log')
-    log_file_format = "{asctime:<25s}" + log_format
-    log_file_formatter = Formatter(log_file_format, style="{")
+    log_file_handler: FileHandler = FileHandler('log_file.log')
+    log_file_format: str = "{asctime:<25s}" + log_format
+    log_file_formatter: Formatter = Formatter(log_file_format, style="{")
     log_file_handler.setFormatter(log_file_formatter)
 
-    log_term_handler = StreamHandler(sys.stdout)
-    log_term_formatter = Formatter(log_format, style="{")
+    log_term_handler: StreamHandler = StreamHandler(sys.stdout)
+    log_term_formatter: Formatter = Formatter(log_format, style="{")
     log_term_handler.setFormatter(log_term_formatter)
 
     logger.addHandler(log_file_handler)

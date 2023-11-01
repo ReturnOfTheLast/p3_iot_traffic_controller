@@ -6,6 +6,7 @@
 from logger import get_logger
 from socket import PF_PACKET, SOCK_RAW, ntohs, socket
 from typing import Iterator
+from logging import Logger
 import itertools
 
 
@@ -19,8 +20,8 @@ class Sniffer:
         Args:
             interface (str): Interface to sniff on
         """
-        self.interface = interface
-        self.logger = get_logger(
+        self.interface: str = interface
+        self.logger:  Logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
 
     def _bind_interface(self, sock: socket):
@@ -33,7 +34,7 @@ class Sniffer:
             self.logger.info(f"Binding interface to {self.interface}")
             sock.bind((self.interface, 0))
 
-    def execute(self) -> Iterator:
+    def execute(self) -> Iterator[tuple[int, bytes]]:
         """Sniff for frames and yield them
 
         Yields:
@@ -43,6 +44,6 @@ class Sniffer:
             self._bind_interface(sock)
             self.logger.info("Listening for frames")
             for frame_num in itertools.count(1):
-                frame = sock.recv(9000)
+                frame: bytes = sock.recv(9000)
                 self.logger.info(f"Received a {len(frame)} bytes frame")
                 yield (frame_num, frame)
