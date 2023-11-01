@@ -40,7 +40,7 @@ class Commander:
 
         self.logger.info("Generating our IPTables config...")
         iptables_custom_conf: str = self.tables.to_iptables()
-        self.logger.debug(f"IPTables command: \n{iptables_custom_conf}")
+        self.logger.debug(f"IPTables config: \n{iptables_custom_conf}")
 
         self.logger.info("Getting the Original config...")
         iptables_save_proc: Popen = Popen(
@@ -49,10 +49,10 @@ class Commander:
             stdout=PIPE,
             stderr=PIPE
         )
-        iptables_orig_conf, err = iptables_save_proc.communicate()
+        iptables_orig_conf, stderr = iptables_save_proc.communicate()
         iptables_orig_conf: str = iptables_orig_conf.decode()
         self.logger.debug(f"Original config: \n{iptables_orig_conf}")
-        self.logger.debug(f"STDERR from process: {err}")
+        self.logger.debug(f"STDERR: \n{stderr}")
 
         self.logger.info("Saving Original config to original_iptables.conf...")
         with open("original_iptables.conf", "w") as fp:
@@ -62,6 +62,19 @@ class Commander:
         iptables_new_conf: str = iptables_orig_conf \
             + "\n" + iptables_custom_conf
         self.logger.debug(f"New config: \n{iptables_new_conf}")
+
+        self.logger.info("Applying the config...")
+        iptables_restore_proc: Popen = Popen(
+            ["iptables-restore"],
+            stdin=PIPE,
+            stdout=PIPE,
+            stderr=PIPE
+        )
+        stdout, stderr = iptables_restore_proc.communicate(
+            input=iptables_new_conf.encode()
+        )
+        self.logger.debug(f"STDOUT: \n{stdout}")
+        self.logger.debug(f"STDERR: \n{stderr}")
 
     def run(self):
         while True:
