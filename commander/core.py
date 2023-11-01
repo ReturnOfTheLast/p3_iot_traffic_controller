@@ -21,6 +21,7 @@ class Commander:
             "sec_chain",
             comment="Security Chain for Filtering"
         )
+        self.tables["filter"].append(self.sec_chain)
         self.logger.info("Attaching chain to FORWARD...")
         self.tables["filter"]["FORWARD"].insert(0, Jump(self.sec_chain))
 
