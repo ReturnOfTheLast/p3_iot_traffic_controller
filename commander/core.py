@@ -38,7 +38,7 @@ class Commander:
         self.logger.debug(f"Finished tables: {self.tables}")
 
         self.logger.info("Generating IPTables command...")
-        iptables_command: bytes = self.tables.to_iptables().encode('UTF-8')
+        iptables_command: bytes = self.tables.to_iptables()
         self.logger.debug(f"IPTables command: {iptables_command}")
 
     def run(self):
