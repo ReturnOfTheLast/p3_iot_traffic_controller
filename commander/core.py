@@ -7,6 +7,7 @@ from pyptables.tables import Tables, Table
 from pyptables.chains import UserChain, BuiltinChain
 from pyptables.rules import Jump
 from logging import Logger
+from subprocess import Popen, PIPE
 
 
 class Commander:
@@ -37,9 +38,29 @@ class Commander:
 
         self.logger.debug(f"Finished tables: {self.tables}")
 
-        self.logger.info("Generating IPTables command...")
-        iptables_command: bytes = self.tables.to_iptables()
-        self.logger.debug(f"IPTables command: {iptables_command}")
+        self.logger.info("Generating our IPTables config...")
+        iptables_custom_conf: str = self.tables.to_iptables()
+        self.logger.debug(f"IPTables command: \n{iptables_custom_conf}")
+
+        self.logger.info("Getting the Original config...")
+        iptables_save_proc: Popen = Popen(
+            ["iptables-save"],
+            stdin=None,
+            stdout=PIPE,
+            stderr=PIPE
+        )
+        iptables_orig_conf, err = iptables_save_proc.communicate()
+        self.logger.debug(f"Original config: \n{iptables_orig_conf}")
+        self.logger.debug(f"STDERR from process: {err}")
+
+        self.logger.info("Saving Original config to original_iptables.conf...")
+        with open("original_iptables.conf", "w") as fp:
+            fp.write(iptables_orig_conf)
+
+        self.logger.info("Generating new config...")
+        iptables_new_conf: str = iptables_orig_conf \
+            + "\n" + iptables_custom_conf
+        self.logger.debug(f"New config: \n{iptables_new_conf}")
 
     def run(self):
         while True:

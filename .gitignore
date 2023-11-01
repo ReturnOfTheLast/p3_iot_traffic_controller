@@ -177,3 +177,6 @@ pyrightconfig.json
 
 # Ignore pickles
 *.pkl
+
+# Ignore iptables rules file
+original_iptables.conf
