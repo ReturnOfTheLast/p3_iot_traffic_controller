@@ -50,6 +50,7 @@ class Commander:
             stderr=PIPE
         )
         iptables_orig_conf, err = iptables_save_proc.communicate()
+        iptables_orig_conf: str = iptables_orig_conf.decode()
         self.logger.debug(f"Original config: \n{iptables_orig_conf}")
         self.logger.debug(f"STDERR from process: {err}")
 
