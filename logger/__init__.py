@@ -7,9 +7,11 @@ from logging import (
     StreamHandler,
     Formatter,
     getLogger,
-    INFO
+    INFO,
+    DEBUG
 )
 import sys
+from os import environ
 
 
 def get_logger(name: str) -> Logger:
@@ -22,7 +24,7 @@ def get_logger(name: str) -> Logger:
         Logger: The logger
     """
     logger: Logger = getLogger(name)
-    logger.setLevel(INFO)
+    logger.setLevel(DEBUG if environ["DEBUG"] else INFO)
 
     log_format: str = "{name:<35s} {levelname:>8s}: {message}"
 
