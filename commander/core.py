@@ -35,7 +35,7 @@ class Commander:
         self.logger.info("Adding a Jump from FORWARD to our chain...")
         self.tables['filter']["FORWARD"].insert(0, Jump(self.sec_chain))
 
-        self.tables.debug(f"Finished tables: {self.tables}")
+        self.logger.debug(f"Finished tables: {self.tables}")
 
         self.logger.info("Generating IPTables command...")
         iptables_command: bytes = self.tables.to_iptables().encode('UTF-8')
