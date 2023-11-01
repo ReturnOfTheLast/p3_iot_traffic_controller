@@ -3,7 +3,7 @@
 
 from queuemanager.core import CommandQueue
 from logger import get_logger
-from pyptables import default_tables, Tables, UserChain
+from pyptables import default_tables, restore, Tables, UserChain
 from pyptables.rules import Jump
 from logging import Logger
 
@@ -22,8 +22,12 @@ class Commander:
             comment="Security Chain for Filtering"
         )
         self.tables["filter"].append(self.sec_chain)
+
         self.logger.info("Attaching chain to FORWARD...")
         self.tables["filter"]["FORWARD"].insert(0, Jump(self.sec_chain))
+
+        self.logger.info("Writing tables to the kernel...")
+        restore(self.tables)
 
     def run(self):
         while True:
