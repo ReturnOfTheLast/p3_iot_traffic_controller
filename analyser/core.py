@@ -5,15 +5,17 @@ from framedissect import dissect
 from queuemanager.core import FrameQueue
 from pubsub.core import Publisher
 from netprotocols import Protocol
+from threading import Thread
 import re
 
 ip_pattern: str = r'^10\.10\.0\.[0-9]*$'
 
 
-class Analyser(Publisher):
+class Analyser(Publisher, Thread):
 
     def __init__(self, frame_queue: FrameQueue):
         Publisher.__init__(self)
+        Thread.__init__(self)
         self.frame_queue: FrameQueue = frame_queue
 
     def next_frame(self):
@@ -32,3 +34,8 @@ class Analyser(Publisher):
         else:
             self.logger.info("Couldn't find IPv4")
             self.logger.debug(f"The protocols were {self.framedic[1].keys()}")
+
+    def run(self):
+        while True:
+            self.next_frame()
+            self.analyse()
