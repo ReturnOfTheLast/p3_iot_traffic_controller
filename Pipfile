@@ -6,8 +6,8 @@ name = "pypi"
 [packages]
 pymongo = "*"
 netprotocols = "*"
-pyptables = "*"
 redis = "*"
+python-iptables = "*"
 
 [dev-packages]
 ipython = "*"
