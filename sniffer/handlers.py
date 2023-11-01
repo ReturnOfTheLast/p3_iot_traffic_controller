@@ -4,24 +4,19 @@
 # Inspired by and burrowing from https://github.com/EONRaider/Packet-Sniffer
 
 from __future__ import annotations
-from sniffer.core import Sniffer
 from logger import get_logger
 from logging import Logger
 from abc import ABC, abstractmethod
 
 
 class FramePublisher:
-    """Handle sniffer and publish frames
+    """A class for publishing frames
     """
 
-    def __init__(self, sniffer: Sniffer):
+    def __init__(self):
         """FramePublisher constructor
-
-        Args:
-            sniffer (Sniffer): Sniffer to use
         """
         self._subscribers: list[FrameSubscriber] = list()
-        self._sniffer: Sniffer = sniffer
         self.logger: Logger = get_logger(
             f"{self.__module__}.{self.__class__.__qualname__}")
 
@@ -44,12 +39,6 @@ class FramePublisher:
         self.logger.info("Notifying all subscribers")
         [subscriber.update(*args, **kwargs)
             for subscriber in self._subscribers]
-
-    def start(self):
-        """Start the sniffer and publish its frames
-        """
-        for frame in self._sniffer.execute():
-            self._notify_all(frame)
 
 
 class FrameSubscriber(ABC):

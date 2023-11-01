@@ -20,7 +20,6 @@ if os.getuid() != 0:
 
 from queuemanager.core import FrameQueue
 from sniffer.core import Sniffer
-from sniffer.handlers import FramePublisher
 from logger import get_logger
 from logging import Logger
 from argparse import ArgumentParser
@@ -32,8 +31,7 @@ parser.add_argument('-i', '--interface', type=str, default=None, dest='iface')
 args = parser.parse_args()
 
 sniffer: Sniffer = Sniffer(args.iface)
-frame_publisher: FramePublisher = FramePublisher(sniffer)
-frame_queue: FrameQueue = FrameQueue(frame_publisher)
+frame_queue: FrameQueue = FrameQueue(sniffer)
 
 logger.info("Starting sniffer")
-frame_publisher.start()
+sniffer.execute()
