@@ -11,7 +11,34 @@ from logging import (
     DEBUG
 )
 import sys
-from os import environ
+from singleton import Singleton
+
+
+class CustomFormatter(Formatter):
+    def __init__(self, time=False):
+        lformat: str = "{asctime:<25s} {name:<35s} {levelname:>8s}: {message}"
+        Formatter.__init__(self, lformat, style="{")
+
+
+class DebugFileHandler(FileHandler, metaclass=Singleton):
+    def __init__(self):
+        FileHandler.__init__(self, "debug.log")
+        self.setFormatter(CustomFormatter(time=True))
+        self.setLevel(DEBUG)
+
+
+class InfoFileHandler(FileHandler, metaclass=Singleton):
+    def __init__(self):
+        FileHandler.__init__(self, "info.log")
+        self.setFormatter(CustomFormatter(time=True))
+        self.setLevel(INFO)
+
+
+class ConsoleHandler(StreamHandler, metaclass=Singleton):
+    def __init__(self):
+        StreamHandler.__init__(self, sys.stdout)
+        self.setFormatter(CustomFormatter())
+        self.setLevel(INFO)
 
 
 def get_logger(name: str) -> Logger:
@@ -24,20 +51,10 @@ def get_logger(name: str) -> Logger:
         Logger: The logger
     """
     logger: Logger = getLogger(name)
-    logger.setLevel(DEBUG if environ.get("DEBUG") else INFO)
+    logger.setLevel(DEBUG)
 
-    log_format: str = "{name:<35s} {levelname:>8s}: {message}"
-
-    log_file_handler: FileHandler = FileHandler('log_file.log')
-    log_file_format: str = "{asctime:<25s}" + log_format
-    log_file_formatter: Formatter = Formatter(log_file_format, style="{")
-    log_file_handler.setFormatter(log_file_formatter)
-
-    log_term_handler: StreamHandler = StreamHandler(sys.stdout)
-    log_term_formatter: Formatter = Formatter(log_format, style="{")
-    log_term_handler.setFormatter(log_term_formatter)
-
-    logger.addHandler(log_file_handler)
-    logger.addHandler(log_term_handler)
+    logger.addHandler(DebugFileHandler())
+    logger.addHandler(InfoFileHandler())
+    logger.addHandler(ConsoleHandler())
 
     return logger
