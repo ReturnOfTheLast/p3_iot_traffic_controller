@@ -51,10 +51,10 @@ def get_logger(name: str) -> Logger:
         Logger: The logger
     """
     logger: Logger = getLogger(name)
-    logger.setLevel(DEBUG)
-
-    logger.addHandler(DebugFileHandler())
-    logger.addHandler(InfoFileHandler())
-    logger.addHandler(ConsoleHandler())
+    if not logger.hasHandlers():
+        logger.setLevel(DEBUG)
+        logger.addHandler(DebugFileHandler())
+        logger.addHandler(InfoFileHandler())
+        logger.addHandler(ConsoleHandler())
 
     return logger
