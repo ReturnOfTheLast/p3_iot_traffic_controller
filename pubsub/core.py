@@ -4,12 +4,11 @@
 # Inspired by and burrowing from https://github.com/EONRaider/Packet-Sniffer
 
 from __future__ import annotations
-from logger import get_logger
-from logging import Logger
-from abc import ABC, abstractmethod
+from logger import LoggingObject
+from abc import abstractmethod
 
 
-class Publisher:
+class Publisher(LoggingObject):
     """A class for publishing
     """
 
@@ -17,8 +16,6 @@ class Publisher:
         """Publisher constructor
         """
         self._subscribers: list[Subscriber] = list()
-        self.logger:  Logger = get_logger(
-            f"{self.__module__}.{self.__class__.__qualname__}")
 
     def register(self, subscriber: Subscriber):
         """Register subscriber
@@ -42,7 +39,7 @@ class Publisher:
             for subscriber in self._subscribers]
 
 
-class Subscriber(ABC):
+class Subscriber(LoggingObject):
     """Abstract class to subscribe to Publishers
     """
 
@@ -52,9 +49,6 @@ class Subscriber(ABC):
         Args:
             publishers (list[Publisher]): Publishers to subscribe to
         """
-        self.logger:  Logger = get_logger(
-            f"{self.__module__}.{self.__class__.__qualname__}")
-
         for publisher in publishers:
             publisher.register(self)
 

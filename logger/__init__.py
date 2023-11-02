@@ -11,6 +11,7 @@ from logging import (
     DEBUG
 )
 import sys
+from abc import ABC
 from singleton import Singleton
 
 
@@ -41,20 +42,20 @@ class ConsoleHandler(StreamHandler, metaclass=Singleton):
         self.setLevel(INFO)
 
 
-def get_logger(name: str) -> Logger:
-    """Get preconfigured logger
-
-    Args:
-        name (str): Name of the logger to get
-
-    Returns:
-        Logger: The logger
+class LoggingObject(ABC):
+    """Describes an element that can log
     """
-    logger: Logger = getLogger(name)
-    if not logger.hasHandlers():
-        logger.setLevel(DEBUG)
-        logger.addHandler(DebugFileHandler())
-        logger.addHandler(InfoFileHandler())
-        logger.addHandler(ConsoleHandler())
 
-    return logger
+    _logger = None
+
+    @property
+    def logger(self):
+        if not self._logger:
+            self._logger: Logger = getLogger(
+                f"{self.__module__}.{self.__class__.__qualname__}"
+            )
+            self._logger.setLevel(DEBUG)
+            self._logger.addHandler(DebugFileHandler())
+            self._logger.addHandler(InfoFileHandler())
+            self._logger.addHandler(ConsoleHandler())
+        return self._logger
