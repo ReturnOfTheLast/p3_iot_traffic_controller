@@ -10,6 +10,7 @@ redis = "*"
 
 [dev-packages]
 ipython = "*"
+ansibleguy-nftables = "*"
 
 [requires]
 python_version = "3.11"
