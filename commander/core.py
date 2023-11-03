@@ -45,7 +45,7 @@ class Commander(LoggingObject):
         self.logger.info("Setting up our chain and rules on NFTables...")
         self.logger.debug(
             f"NFTables command: \n{json.dumps(nft_command, indent=2)}")
-        rc, output, error = self.nft.json(nft_command)
+        rc, output, error = self.nft.json_cmd(nft_command)
         self.logger.debug(f"Return code: {rc}")
         self.logger.debug(f"Output: \n{json.dumps(output, indent=2)}")
         self.logger.debug(f"Error: \n{json.dumps(error, indent=2)}")
