@@ -3,7 +3,7 @@
 
 # Inspired by and burrowing from https://github.com/EONRaider/Packet-Sniffer
 
-from pubsub.core import Publisher
+from pubsub import Publisher
 from socket import PF_PACKET, SOCK_RAW, ntohs, socket
 import itertools
 

@@ -3,7 +3,7 @@
 
 from framedissect import dissect
 from queuemanager.core import FrameQueue
-from pubsub.core import Publisher
+from pubsub import Publisher
 from netprotocols import Protocol
 from threading import Thread
 import re

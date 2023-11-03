@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
-from pubsub.core import Publisher, Subscriber
+from pubsub import Publisher, Subscriber
 from queue import Queue
 
 
