@@ -7,10 +7,10 @@ name = "pypi"
 pymongo = "*"
 netprotocols = "*"
 redis = "*"
+ansibleguy-nftables = "*"
 
 [dev-packages]
 ipython = "*"
-ansibleguy-nftables = "*"
 
 [requires]
 python_version = "3.11"
