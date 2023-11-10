@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
-from queuemanager.core import CommandQueue
+from queuemanager import CommandQueue
 from logger import LoggingObject
 from nftables import Nftables
 import json

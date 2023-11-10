@@ -18,8 +18,8 @@ import os
 if os.getuid() != 0:
     raise PermissionError("Script need to be run as root, please do so")
 
-from queuemanager.core import FrameQueue
-from sniffer.core import Sniffer
+from queuemanager import FrameQueue
+from sniffer import Sniffer
 from argparse import ArgumentParser
 
 parser: ArgumentParser = ArgumentParser()

@@ -2,7 +2,7 @@
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
 from framedissect import dissect
-from queuemanager.core import FrameQueue
+from queuemanager import FrameQueue
 from pubsub import Publisher
 from netprotocols import Protocol
 from threading import Thread
