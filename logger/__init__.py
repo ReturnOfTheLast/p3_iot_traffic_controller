@@ -15,13 +15,13 @@ from abc import ABC
 from singleton import Singleton
 
 
-class FileFormatter(Formatter, metaclass=Singleton):
+class FileFormatter(Formatter):
     def __init__(self):
         lformat: str = "{asctime:<25s} {name:<35s} {levelname:>8s}: {message}"
         Formatter.__init__(self, lformat, style="{")
 
 
-class ConsoleFormatter(Formatter, metaclass=Singleton):
+class ConsoleFormatter(Formatter):
     def __init__(self):
         lformat: str = "{name:<35s} {levelname:>8s}: {message}"
         Formatter.__init__(self, lformat, style="{")
