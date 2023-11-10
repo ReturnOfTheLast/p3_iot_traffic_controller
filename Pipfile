@@ -8,6 +8,7 @@ pymongo = "*"
 netprotocols = "*"
 redis = "*"
 ansibleguy-nftables = "*"
+python-dotenv = "*"
 
 [dev-packages]
 ipython = "*"

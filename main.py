@@ -21,6 +21,9 @@ if os.getuid() != 0:
 from queuemanager import FrameQueue
 from sniffer import Sniffer
 from argparse import ArgumentParser
+from dotenv import load_dotenv
+
+load_dotenv()
 
 parser: ArgumentParser = ArgumentParser()
 parser.add_argument('-i', '--interface', type=str, default=None, dest='iface')
