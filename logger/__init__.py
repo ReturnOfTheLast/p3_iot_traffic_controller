@@ -15,36 +15,43 @@ from abc import ABC
 from singleton import Singleton
 
 
-class FileFormatter(Formatter):
-    def __init__(self):
-        lformat: str = "{asctime:<25s} {name:<25s} {levelname:>8s}: {message}"
-        Formatter.__init__(self, lformat, style="{")
+class CustomFormatter(Formatter):
+    lformat: str = "[{threadName:^12s}] {name:<25s} {levelname:>8s}: {message}"
+
+    def __init__(self, prefix: str = None, suffix: str = None):
+        if type(prefix) is str:
+            self.lformat = prefix + self.lformat
+
+        if type(suffix) is str:
+            self.lformat = self.lformat + suffix
+
+        Formatter.__init__(self, self.lformat, style="{")
 
 
-class ConsoleFormatter(Formatter):
+class CustomFileFormatter(CustomFormatter):
     def __init__(self):
-        lformat: str = "{name:<25s} {levelname:>8s}: {message}"
-        Formatter.__init__(self, lformat, style="{")
+        prefix: str = "{asctime:<25s} "
+        CustomFormatter.__init__(self, prefix=prefix)
 
 
 class DebugFileHandler(FileHandler, metaclass=Singleton):
     def __init__(self):
         FileHandler.__init__(self, "debug.log")
-        self.setFormatter(FileFormatter())
+        self.setFormatter(CustomFileFormatter())
         self.setLevel(DEBUG)
 
 
 class InfoFileHandler(FileHandler, metaclass=Singleton):
     def __init__(self):
         FileHandler.__init__(self, "info.log")
-        self.setFormatter(FileFormatter())
+        self.setFormatter(CustomFileFormatter())
         self.setLevel(INFO)
 
 
 class ConsoleHandler(StreamHandler, metaclass=Singleton):
     def __init__(self):
         StreamHandler.__init__(self, sys.stdout)
-        self.setFormatter(ConsoleFormatter())
+        self.setFormatter(CustomFormatter())
         self.setLevel(INFO)
 
 
