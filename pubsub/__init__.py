@@ -49,6 +49,8 @@ class Subscriber(LoggingObject):
         Args:
             publishers (list[Publisher]): Publishers to subscribe to
         """
+
+        self.logger.info("Registering to publishers")
         for publisher in publishers:
             publisher.register(self)
 

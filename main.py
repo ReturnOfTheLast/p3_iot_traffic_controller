@@ -18,8 +18,10 @@ import os
 if os.getuid() != 0:
     raise PermissionError("Script need to be run as root, please do so")
 
-from queuemanager import FrameQueue
+from queuemanager import FrameQueue, CommandQueue
 from sniffer import Sniffer
+from analyser import Analyser
+from commander import Commander
 from argparse import ArgumentParser
 from dotenv import load_dotenv
 
@@ -27,9 +29,19 @@ load_dotenv()
 
 parser: ArgumentParser = ArgumentParser()
 parser.add_argument('-i', '--interface', type=str, default=None, dest='iface')
+parser.add_argument('-a', '--analysers', type=int, default=4, dest='analysers')
 args = parser.parse_args()
 
 sniffer: Sniffer = Sniffer(args.iface)
+
 frame_queue: FrameQueue = FrameQueue(sniffer)
+
+analysers: list[Analyser] = list()
+for i in range(args.analysers):
+    analysers.append(Analyser(frame_queue))
+
+command_queue: CommandQueue = CommandQueue(analysers)
+
+commander: Commander = Commander(command_queue)
 
 sniffer.execute()
