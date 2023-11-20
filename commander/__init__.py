@@ -5,6 +5,7 @@ from queuemanager import CommandQueue
 from logger import LoggingObject
 from threading import Thread, Event
 from queue import Empty
+from os import environ
 import dbus
 
 
@@ -31,14 +32,26 @@ class Commander(LoggingObject, Thread):
     def run(self):
         while not self.stop_event.is_set():
             try:
-                command = self.command_queue.get(timeout=10)
+                command: str = self.command_queue.get(timeout=10)
             except Empty:
                 self.logger.debug("No Command Available")
                 continue
 
             self.logger.info("Got a command")
             self.logger.debug(f"Command: {command}")
-            # TODO: Structure of commands and how to
-            # convert it into a Rule on the chain
+            policy_config = self.firewalld.getPolicySettings(
+                environ["FIREWALLD_POLICY"]
+            )
+            self.logger.debug(f"Current Settings for Policy:\n{policy_config}")
+            policy_config["rich_rules"].append(
+                f"rule family=ipv4 destination address={command} drop"
+            )
+            self.logger.debug(f"New Policy Settings:\n{policy_config}")
+            self.firewalld.setPolicySettings(
+                environ["FIREWALLD_POLICY"],
+                policy_config,
+                0
+            )
+            self.logger.info("Added new rule")
 
         self.logger.info("Commander has Stopped")
