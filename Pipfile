@@ -7,8 +7,8 @@ name = "pypi"
 pymongo = "*"
 netprotocols = "*"
 redis = "*"
-ansibleguy-nftables = "*"
 python-dotenv = "*"
+dbus-python = "*"
 
 [dev-packages]
 ipython = "*"

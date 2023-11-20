@@ -5,6 +5,7 @@ from queuemanager import CommandQueue
 from logger import LoggingObject
 from threading import Thread, Event
 from queue import Empty
+import dbus
 
 
 class Commander(LoggingObject, Thread):
@@ -18,6 +19,13 @@ class Commander(LoggingObject, Thread):
         Thread.__init__(self, name=name)
         self.command_queue: CommandQueue = command_queue
         self.stop_event: Event = stop_event
+        self.logger.debug(f"Attached Stop Event:\n{self.stop_event}")
+        bus = dbus.SystemBus()
+        self.firewalld = bus.get_object(
+            'org.fedoraproject.FirewallD1',
+            '/org/fedoraproject/FirewallD1'
+        )
+        self.logger.debug(f"Connected to firewalld dbus:\n{self.firewalld}")
         self.logger.info("Commander Initialised")
 
     def run(self):

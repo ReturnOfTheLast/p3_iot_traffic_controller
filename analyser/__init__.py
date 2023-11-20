@@ -23,8 +23,9 @@ class Analyser(Publisher, Thread):
         self.logger.info("Initialising Analyser...")
         Publisher.__init__(self)
         Thread.__init__(self, name=name)
-        self.stop_event: Event = stop_event
         self.frame_queue: FrameQueue = frame_queue
+        self.stop_event: Event = stop_event
+        self.logger.debug(f"Attached Stop Event:\n{self.stop_event}")
         self.logger.info("Analyser Initialised")
 
     def analyse(

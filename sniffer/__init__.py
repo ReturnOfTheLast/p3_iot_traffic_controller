@@ -24,10 +24,13 @@ class Sniffer(Publisher, Thread):
         Args:
             interface (str): Interface to sniff on
         """
+        self.logger.info("Initialising Sniffer...")
         Publisher.__init__(self)
         Thread.__init__(self, name=name)
         self.interface: str = interface
         self.stop_event: Event = stop_event
+        self.logger.debug(f"Attached Stop Event:\n{self.stop_event}")
+        self.logger.info("Sniffer Initialised")
 
     def _bind_interface(self, sock: socket):
         """Internal method to bind the socket to interface
