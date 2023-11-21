@@ -5,7 +5,7 @@
 
 from pubsub import Publisher
 from threading import Thread, Event
-from socket import PF_PACKET, SOCK_RAW, ntohs, socket
+from socket import PF_PACKET, SOCK_RAW, ntohs, socket, timeout
 import itertools
 
 
@@ -40,6 +40,7 @@ class Sniffer(Publisher, Thread):
         """
         if self.interface is not None:
             self.logger.info(f"Binding interface to {self.interface}")
+            sock.settimeout(10)
             sock.bind((self.interface, 0))
 
     def run(self):
@@ -51,7 +52,11 @@ class Sniffer(Publisher, Thread):
             for frame_num in itertools.count(1):
                 if self.stop_event.is_set():
                     break
-                frame: bytes = sock.recv(9000)
+                try:
+                    frame: bytes = sock.recv(9000)
+                except timeout:
+                    self.logger.debug("Sniffer receive timed out")
+                    continue
                 self.logger.info(f"Received a {len(frame)} bytes frame")
                 self._notify_all((frame_num, frame))
 
