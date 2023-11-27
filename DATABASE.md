@@ -17,7 +17,7 @@ It has the collections:
 }
 ```
 
-#### Packets
+#### Packets (Not Implemented)
 ```json
 {
     "_id": ObjectId(...),
@@ -39,7 +39,7 @@ It contains the following types of key-value pairs:
 list_<ip-address>: <true|false>
 ```
 
-### Packet
+### Packet (Not Implemented)
 ```text
-packet_<uuid>: <Packet document as seen above in MongoDB, just with no '_id'>
+packet_<uuid>: <Pickle of packet object from framedissect>
 ```
