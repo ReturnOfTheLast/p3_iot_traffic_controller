@@ -9,6 +9,7 @@ netprotocols = "*"
 redis = "*"
 python-dotenv = "*"
 dbus-python = "*"
+requests = "*"
 
 [dev-packages]
 ipython = "*"

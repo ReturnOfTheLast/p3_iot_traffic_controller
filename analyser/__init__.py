@@ -2,14 +2,12 @@
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
 from framedissect import dissect
+from analyser.utils import from_network
 from queuemanager import FrameQueue
 from pubsub import Publisher
 from netprotocols import Protocol
 from threading import Thread, Event
 from queue import Empty
-import re
-
-ip_pattern: str = r'^10\.10\.0\.[0-9]*$'
 
 
 class Analyser(Publisher, Thread):
@@ -34,7 +32,7 @@ class Analyser(Publisher, Thread):
         framedic: tuple[int, dict[str, Protocol]]
     ):
         if 'IPv4' in framedic[1].keys():
-            if re.match(ip_pattern, framedic[1]['IPv4'].src):
+            if from_network(framedic[1]['IPv4'].src):
                 data: bytes = frame[1][framedic[0]:]
                 self.logger.debug(f"Data: {data}")
                 # TODO: Do something with the data
