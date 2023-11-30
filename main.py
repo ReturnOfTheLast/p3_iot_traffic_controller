@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
-__author__ = "Akse0402 (Aksel), Benjo (Benjamin), Kayeon (Jonathan), and \
+__author__ = "Akse0402 (Aksel), Banjo (Benjamin), Kayeon (Jonathan), and \
 ReturnOfTheLast (Marcus)"
 __credits__ = ["Akse0402 (Aksel)",
-               "Benjo (Benjamin)",
+               "Banjo (Benjamin)",
                "Kayeon (Jonathan)",
                "ReturnOfTheLast (Marcus)"]
-__version__ = "0.1-dev"
+__version__ = "0.5-dev"
 __status__ = "Development"
 
 if __name__ != "__main__":
