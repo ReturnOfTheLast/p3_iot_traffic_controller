@@ -23,7 +23,7 @@ from sniffer import Sniffer
 from analyser import Analyser
 from commander import Commander
 from database import DatabaseWriter
-from databasesync import restore_redis_cache
+from databasesync import restore_redis_cache, sync_redis_to_mongo
 from logger import LoggingObject
 from argparse import ArgumentParser
 from threading import Event
@@ -93,3 +93,7 @@ except KeyboardInterrupt:
         analyser.join()
 
     commander.join()
+
+logger.info("Syncing redis to permanent storage")
+sync_redis_to_mongo()
+logger.info("Syncing complete")
