@@ -23,6 +23,7 @@ from sniffer import Sniffer
 from analyser import Analyser
 from commander import Commander
 from database import DatabaseWriter
+from databasesync import restore_redis_cache
 from logger import LoggingObject
 from argparse import ArgumentParser
 from threading import Event
@@ -48,6 +49,9 @@ logger.debug(f"CLI Args: \n{args}")
 stop_event = Event()
 logger.debug(f"Created stop event: \n{stop_event}")
 
+logger.info("Restoring the cache")
+restore_redis_cache()
+logger.info("Cache restored")
 
 logger.info("Initialising Modules...")
 
