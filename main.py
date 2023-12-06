@@ -22,6 +22,7 @@ from queuemanager import FrameQueue, CommandQueue
 from sniffer import Sniffer
 from analyser import Analyser
 from commander import Commander
+from database import DatabaseWriter
 from logger import LoggingObject
 from argparse import ArgumentParser
 from threading import Event
@@ -58,8 +59,9 @@ analysers: list[Analyser] = list()
 for i in range(args.analysers):
     analysers.append(Analyser(frame_queue, stop_event, f"Analyser_{i}"))
 
-
 command_queue: CommandQueue = CommandQueue(analysers)
+
+database_writer: DatabaseWriter = DatabaseWriter(analysers)
 
 commander: Commander = Commander(command_queue, stop_event, "Commander")
 
