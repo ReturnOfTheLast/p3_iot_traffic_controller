@@ -37,14 +37,15 @@ def sync_redis_to_mongo():
     docs = []
 
     for key in redis_client.scan_iter():
-        if key[:5] == "list_":
-            if collection.find_one({"ip": key[5:]}):
+        str_key = key.decode()
+        if str_key[:5] == "list_":
+            if collection.find_one({"ip": str_key[5:]}):
                 continue
 
-            allowed = redis_client.get(key) == 'white'
+            allowed = redis_client.get(str_key) == 'white'
 
             docs.append({
-                "ip": key[5:],
+                "ip": str_key[5:],
                 "allowed": allowed
             })
 
