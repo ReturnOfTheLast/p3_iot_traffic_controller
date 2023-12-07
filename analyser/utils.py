@@ -13,7 +13,9 @@ def from_network(ip_address: str) -> bool:
 
 def get_ip_location(ip_address: str):
     try:
-        r = requests.get(f'https://geolocation-db.com/json/{ip_address}')
+        r = requests.get(
+            f'https://geolocation-db.com/json/{ip_address}',
+            allow_redirects=True)
     except Exception as e:
         return None, e
 
