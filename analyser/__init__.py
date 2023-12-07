@@ -45,11 +45,11 @@ class Analyser(Publisher, Thread):
 
                 iplog, exception = get_ip_location(framedic[1]['IPv4'].dst)
                 if iplog is None:
-                    self.logger.debug(f"Geolocation Exception:\n{exception}")
+                    self.logger.debug(f"IP API Exception:\n{exception}")
                     return False, framedic[1]['IPv4'].dst
 
-                if (iplog.get("country_codes", None) and
-                        iplog["country_code"] in country_codes):
+                if (iplog.get("countryCode", None) and
+                        iplog["countryCode"] in country_codes):
                     return True, framedic[1]['IPv4'].dst
                 return False, framedic[1]['IPv4'].dst
 
