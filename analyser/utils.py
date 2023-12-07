@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
+from redis import Redis
+from os import environ
 import requests
 import re
 
@@ -15,3 +17,10 @@ def get_ip_location(ip_address: str) -> dict[str, str | int] | None:
         return None
 
     return r.json()
+
+
+def whiteblacklisted(ip_address: str) -> bool:
+    redis = Redis(environ['REDIS_HOST'], environ['REDIS_PORT'])
+    if redis.get(f'list_{ip_address}'):
+        return True
+    return False

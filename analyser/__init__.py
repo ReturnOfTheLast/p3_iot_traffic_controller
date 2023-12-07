@@ -2,7 +2,7 @@
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
 from framedissect import dissect
-from analyser.utils import from_network, get_ip_location
+from analyser.utils import from_network, get_ip_location, whiteblacklisted
 from queuemanager import FrameQueue
 from pubsub import Publisher
 from netprotocols import Protocol
@@ -37,20 +37,23 @@ class Analyser(Publisher, Thread):
     ) -> tuple[bool, str | None]:
         if 'IPv4' in framedic[1].keys():
             if from_network(framedic[1]['IPv4'].src):
+                if whiteblacklisted(framedic[1]['IPv4'].dst):
+                    return False, None
+
                 data: bytes = frame[1][framedic[0]:]
                 self.logger.debug(f"Data: {data}")
+
                 iplog: dict = get_ip_location(framedic[1]['IPv4'].dst)
                 if iplog["country_code"] in country_codes:
                     return True, framedic[1]['IPv4'].dst
-                else:
-                    return False, None
-            else:
-                self.logger.info("Source is not from network... ignoring")
                 return False, None
-        else:
-            self.logger.info("Couldn't find IPv4")
-            self.logger.debug(f"The protocols were {framedic[1].keys()}")
+
+            self.logger.info("Source is not from network... ignoring")
             return False, None
+
+        self.logger.info("Couldn't find IPv4")
+        self.logger.debug(f"The protocols were {framedic[1].keys()}")
+        return False, None
 
     def run(self):
         while not self.stop_event.is_set():
