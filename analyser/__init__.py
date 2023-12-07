@@ -43,8 +43,12 @@ class Analyser(Publisher, Thread):
                 data: bytes = frame[1][framedic[0]:]
                 self.logger.debug(f"Data: {data}")
 
-                iplog: dict = get_ip_location(framedic[1]['IPv4'].dst)
-                if (iplog and iplog.get("country_codes", None) and
+                iplog, exception = get_ip_location(framedic[1]['IPv4'].dst)
+                if iplog is None:
+                    self.logger.debug(f"Geolocation Exception:\n{exception}")
+                    return False, None
+
+                if (iplog.get("country_codes", None) and
                         iplog["country_code"] in country_codes):
                     return True, framedic[1]['IPv4'].dst
                 return False, None

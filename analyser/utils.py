@@ -11,12 +11,16 @@ def from_network(ip_address: str) -> bool:
     return re.match(r'^10\.10\.0\.[0-9]*$', ip_address)
 
 
-def get_ip_location(ip_address: str) -> dict[str, str | int] | None:
-    r = requests.get(f'https://geolocation-db.com/json/{ip_address}')
-    if r.status_code != 200:
-        return None
+def get_ip_location(ip_address: str):
+    try:
+        r = requests.get(f'https://geolocation-db.com/json/{ip_address}')
+    except Exception as e:
+        return None, e
 
-    return r.json()
+    if r.status_code != 200:
+        return None, Exception(f"Failed Status code: {r.status_code}")
+
+    return r.json(), None
 
 
 def whiteblacklisted(ip_address: str) -> bool:
