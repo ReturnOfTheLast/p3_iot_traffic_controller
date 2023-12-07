@@ -19,7 +19,10 @@ def restore_redis_cache():
     cursor: Cursor = collection.find()
 
     for document in cursor:
-        redis_client.set(f"list_{document['ip']}", document['allowed'])
+        redis_client.set(
+            f"list_{document['ip']}",
+            'white' if document['allowed'] else 'black'
+        )
 
 
 def sync_redis_to_mongo():
@@ -38,9 +41,11 @@ def sync_redis_to_mongo():
             if collection.find_one({"ip": key[5:]}):
                 continue
 
+            allowed = redis_client.get(key) == 'white'
+
             docs.append({
                 "ip": key[5:],
-                "allowed": redis_client.get(key)
+                "allowed": allowed
             })
 
     collection.insert_many(docs)

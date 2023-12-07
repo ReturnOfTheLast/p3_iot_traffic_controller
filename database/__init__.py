@@ -18,4 +18,4 @@ class DatabaseWriter(Subscriber):
         self.logger.info("Database Writer Initialised")
 
     def update(self, key):
-        self.redis.set(f"list_{key}", True)
+        self.redis.set(f"list_{key}", "black")

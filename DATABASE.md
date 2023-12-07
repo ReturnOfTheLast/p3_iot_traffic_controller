@@ -36,7 +36,7 @@ It contains the following types of key-value pairs:
 
 ### White/Black List
 ```text
-list_<ip-address>: <true|false>
+list_<ip-address>: <white|black>
 ```
 
 ### Packet (Not Implemented)
