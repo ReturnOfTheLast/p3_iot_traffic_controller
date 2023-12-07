@@ -38,7 +38,7 @@ class Analyser(Publisher, Thread):
         if 'IPv4' in framedic[1].keys():
             if from_network(framedic[1]['IPv4'].src):
                 if whiteblacklisted(framedic[1]['IPv4'].dst):
-                    return False, None
+                    return False, framedic[1]['IPv4'].dst
 
                 data: bytes = frame[1][framedic[0]:]
                 self.logger.debug(f"Data: {data}")
@@ -46,15 +46,15 @@ class Analyser(Publisher, Thread):
                 iplog, exception = get_ip_location(framedic[1]['IPv4'].dst)
                 if iplog is None:
                     self.logger.debug(f"Geolocation Exception:\n{exception}")
-                    return False, None
+                    return False, framedic[1]['IPv4'].dst
 
                 if (iplog.get("country_codes", None) and
                         iplog["country_code"] in country_codes):
                     return True, framedic[1]['IPv4'].dst
-                return False, None
+                return False, framedic[1]['IPv4'].dst
 
             self.logger.info("Source is not from network... ignoring")
-            return False, None
+            return False, framedic[1]['IPv4'].dst
 
         self.logger.info("Couldn't find IPv4")
         self.logger.debug(f"The protocols were {framedic[1].keys()}")
