@@ -15,7 +15,6 @@ class DatabaseWriter(Subscriber):
         self.logger.info("Initialising Database Writer")
         Subscriber.__init__(self, publishers)
         self.redis = Redis(environ["REDIS_HOST"], environ["REDIS_PORT"])
-        self.logger.debug(f"Attached Stop Event:\n{self.stop_event}")
         self.logger.info("Database Writer Initialised")
 
     def update(self, key):
