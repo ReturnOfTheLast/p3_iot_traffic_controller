@@ -44,8 +44,14 @@ class Commander(LoggingObject, Thread):
             )
             self.logger.debug(f"Current Settings for Policy:\n{orig_policy}")
 
+            rich_rules = [
+                f'rule family=ipv4 destination address="{command}" drop']
+            if orig_policy.get('rich_rules', None):
+                rich_rules.extend(
+                    [str(x) for x in list(orig_policy['rich_rules'])])
+
             change_policy = {
-                'rich_rules': [str(x) for x in list(orig_policy['rich_rules'])]
+                'rich_rules': rich_rules
             }
 
             change_policy["rich_rules"].insert(
