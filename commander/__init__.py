@@ -50,13 +50,12 @@ class Commander(LoggingObject, Thread):
 
             change_policy["rich_rules"].insert(
                 0,
-                f"rule family=ipv4 destination address={command} drop"
+                f'rule family=ipv4 destination address="{command}" drop'
             )
             self.logger.debug(f"New Policy Settings:\n{change_policy}")
             self.firewalld.setPolicySettings(
                 environ["FIREWALLD_POLICY"],
-                change_policy,
-                0
+                change_policy
             )
             self.logger.info("Added new rule")
 
