@@ -39,7 +39,7 @@ class Commander(LoggingObject, Thread):
 
             self.logger.info("Got a command")
             self.logger.debug(f"Command: {command}")
-            orig_policy = self.firewalld.getPolicySettings(
+            orig_policy = self.firewalld.get_dbus_method("getPolicySettings")(
                 environ["FIREWALLD_POLICY"]
             )
             self.logger.debug(f"Current Settings for Policy:\n{orig_policy}")
@@ -53,7 +53,7 @@ class Commander(LoggingObject, Thread):
                 f'rule family=ipv4 destination address="{command}" drop'
             )
             self.logger.debug(f"New Policy Settings:\n{change_policy}")
-            self.firewalld.setPolicySettings(
+            self.firewalld.get_dbus_method("setPolicySettings")(
                 environ["FIREWALLD_POLICY"],
                 change_policy
             )
