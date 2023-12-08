@@ -45,7 +45,7 @@ class Commander(LoggingObject, Thread):
             self.logger.debug(f"Current Settings for Policy:\n{orig_policy}")
 
             change_policy = {
-                'rich_rules': [str(x)] for x in list(orig_policy['rich_rules'])
+                'rich_rules': [str(x) for x in list(orig_policy['rich_rules'])]
             }
 
             change_policy["rich_rules"].insert(
