@@ -39,18 +39,23 @@ class Commander(LoggingObject, Thread):
 
             self.logger.info("Got a command")
             self.logger.debug(f"Command: {command}")
-            policy_config = self.firewalld.getPolicySettings(
+            orig_policy = self.firewalld.getPolicySettings(
                 environ["FIREWALLD_POLICY"]
             )
-            self.logger.debug(f"Current Settings for Policy:\n{policy_config}")
-            policy_config["rich_rules"].insert(
+            self.logger.debug(f"Current Settings for Policy:\n{orig_policy}")
+
+            change_policy = {
+                'rich_rules': [str(x)] for x in list(orig_policy['rich_rules'])
+            }
+
+            change_policy["rich_rules"].insert(
                 0,
                 f"rule family=ipv4 destination address={command} drop"
             )
-            self.logger.debug(f"New Policy Settings:\n{policy_config}")
+            self.logger.debug(f"New Policy Settings:\n{change_policy}")
             self.firewalld.setPolicySettings(
                 environ["FIREWALLD_POLICY"],
-                policy_config,
+                change_policy,
                 0
             )
             self.logger.info("Added new rule")
