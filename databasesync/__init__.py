@@ -48,5 +48,5 @@ def sync_redis_to_mongo():
                 "ip": str_key[5:],
                 "allowed": allowed
             })
-
-    collection.insert_many(docs)
+    if len(docs) > 0:
+        collection.insert_many(docs)
