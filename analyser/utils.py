@@ -14,7 +14,7 @@ def from_network(ip_address: str) -> bool:
 def get_ip_location(ip_address: str):
     try:
         r = requests.get(
-            f'http://ip-api.com/json/{ip_address}')
+            f"https://freeipapi.com/api/json/{ip_address}")
     except Exception as e:
         return None, e
 
