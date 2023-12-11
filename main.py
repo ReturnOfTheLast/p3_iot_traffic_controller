@@ -61,7 +61,7 @@ frame_queue: FrameQueue = FrameQueue(sniffer)
 
 analysers: list[Analyser] = list()
 for i in range(args.analysers):
-    analysers.append(Analyser(frame_queue, stop_event, f"Analyser_{i}"))
+    analysers.append(Analyser(frame_queue, stop_event, f"Analyser_{i:02d}"))
 
 command_queue: CommandQueue = CommandQueue(analysers)
 
