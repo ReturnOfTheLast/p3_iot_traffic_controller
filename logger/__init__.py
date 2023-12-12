@@ -16,7 +16,7 @@ from singleton import Singleton
 
 
 class CustomFormatter(Formatter):
-    lformat: str = "[{threadName:^12s}] {name:<25s} {levelname:>8s}: {message}"
+    lformat: str = "[{threadName:^13s}] {name:<25s} {levelname:>8s}: {message}"
 
     def __init__(self, prefix: str = None, suffix: str = None):
         if type(prefix) is str:
