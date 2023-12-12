@@ -62,7 +62,7 @@ def dissect(frame: bytes) -> tuple[int, dict[str, Protocol]]:
         if out is None:
             break
 
-        rhl += out[0] 
+        rhl += out[0]
         current: str = out[1]
 
     return rhl, output
