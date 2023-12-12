@@ -60,7 +60,7 @@ class Sniffer(Publisher, Thread):
                     continue
                 self.logger.info(f"Received a {len(frame)} bytes frame")
                 self._notify_all((frame_num, frame))
-                raw_packet_file.write(f"{frame}\n")
+                raw_packet_file.write(f"{frame.hex()}\n")
 
         raw_packet_file.close()
         self.logger.info("Sniffer has stopped")
