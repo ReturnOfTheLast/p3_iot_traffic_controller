@@ -46,6 +46,7 @@ class Sniffer(Publisher, Thread):
     def run(self):
         """Sniff for frames and publish them
         """
+        raw_packet_file = open("raw_packet_file.txt", "w+")
         with socket(PF_PACKET, SOCK_RAW, ntohs(0x0003)) as sock:
             self._bind_interface(sock)
             self.logger.info("Listening for frames")
@@ -59,5 +60,7 @@ class Sniffer(Publisher, Thread):
                     continue
                 self.logger.info(f"Received a {len(frame)} bytes frame")
                 self._notify_all((frame_num, frame))
+                raw_packet_file.write(f"{frame}\n")
 
+        raw_packet_file.close()
         self.logger.info("Sniffer has stopped")
