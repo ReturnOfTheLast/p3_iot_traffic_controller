@@ -51,7 +51,10 @@ class Commander(LoggingObject, Thread):
                 rich_rules.extend(
                     [str(x) for x in list(orig_policy['rich_rules'])])
 
+            self.logger.debug(f"rich_rules:\n{rich_rules}")
+
             new_rule = f'rule family=ipv4 destination address="{command}" drop'
+            self.logger.debug(f"new_rule:\n{new_rule}")
 
             if new_rule in rich_rules:
                 self.logger.info("Rule already exists")
@@ -59,14 +62,12 @@ class Commander(LoggingObject, Thread):
 
             rich_rules.append(new_rule)
 
+            self.logger.debug(f"rich_rules:\n{rich_rules}")
+
             change_policy = {
                 'rich_rules': rich_rules
             }
 
-            change_policy["rich_rules"].insert(
-                0,
-                f'rule family=ipv4 destination address="{command}" drop'
-            )
             self.logger.debug(f"New Policy Settings:\n{change_policy}")
             self.firewalld.get_dbus_method("setPolicySettings")(
                 environ["FIREWALLD_POLICY"],
