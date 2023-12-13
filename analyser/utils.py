@@ -3,6 +3,7 @@
 
 from redis import Redis
 from os import environ
+from datetime import datetime
 import requests
 import re
 
@@ -29,3 +30,12 @@ def whiteblacklisted(ip_address: str) -> bool:
     if redis.get(f'list_{ip_address}'):
         return True
     return False
+
+
+def notify(ip_address: str):
+    requests.post("http://localhost:8080/api/notify", json={
+        'message': f'''
+        {ip_address} has been banned at {datetime.now().strftime("%c")}
+        ''',
+        'priority': 10
+    })
