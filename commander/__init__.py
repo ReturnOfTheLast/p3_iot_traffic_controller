@@ -33,13 +33,13 @@ class Commander(LoggingObject, Thread):
     def run(self):
         while not self.stop_event.is_set():
             try:
-                command: str = self.command_queue.get(timeout=10)
+                ip: str = self.command_queue.get(timeout=10)
             except Empty:
                 self.logger.debug("No Command Available")
                 continue
 
             self.logger.info("Got a command")
-            self.logger.debug(f"Command: {command}")
+            self.logger.debug(f"Command: {ip}")
 
             orig_policy = self.firewalld.get_dbus_method("getPolicySettings")(
                 environ["FIREWALLD_POLICY"]
@@ -53,7 +53,7 @@ class Commander(LoggingObject, Thread):
 
             self.logger.debug(f"rich_rules:\n{rich_rules}")
 
-            new_rule = f'rule family=ipv4 destination address="{command}" drop'
+            new_rule = f'rule family="ipv4" destination address="{ip}" drop'
             self.logger.debug(f"new_rule:\n{new_rule}")
 
             if new_rule in rich_rules:
@@ -76,6 +76,6 @@ class Commander(LoggingObject, Thread):
             self.logger.info("Added new rule")
 
             self.logger.info("Sending notification to users")
-            notify(command)
+            notify(ip)
 
         self.logger.info("Commander has Stopped")
