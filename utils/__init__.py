@@ -33,9 +33,8 @@ def whiteblacklisted(ip_address: str) -> bool:
 
 
 def notify(ip_address: str):
+    date: str = datetime.now().strftime("%c")
     requests.post("http://localhost:8080/api/notify", json={
-        'message': f'''
-        {ip_address} has been banned at {datetime.now().strftime("%c")}
-        ''',
+        'message': f'{ip_address} has been banned at {date}',
         'priority': 10
     })
