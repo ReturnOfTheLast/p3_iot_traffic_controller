@@ -2,12 +2,7 @@
 # https://github.com/ReturnOfTheLast/p3_iot_traffic_controller
 
 from framedissect import dissect
-from analyser.utils import (
-    from_network,
-    get_ip_location,
-    whiteblacklisted,
-    notify
-)
+from utils import from_network, get_ip_location, whiteblacklisted
 from queuemanager import FrameQueue
 from pubsub import Publisher
 from netprotocols import Protocol
@@ -77,6 +72,5 @@ class Analyser(Publisher, Thread):
             block, ip = self.analyse(frame, framedic)
             self.logger.debug(f"Analysis result:\nblock: {block}\nip: {ip}")
             if block:
-                notify(ip)
                 self._notify_all(ip)
         self.logger.info("Analyser has Stopped")

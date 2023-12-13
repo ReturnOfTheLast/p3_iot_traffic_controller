@@ -3,6 +3,7 @@
 
 from queuemanager import CommandQueue
 from logger import LoggingObject
+from utils import notify
 from threading import Thread, Event
 from queue import Empty
 from os import environ
@@ -39,16 +40,24 @@ class Commander(LoggingObject, Thread):
 
             self.logger.info("Got a command")
             self.logger.debug(f"Command: {command}")
+
             orig_policy = self.firewalld.get_dbus_method("getPolicySettings")(
                 environ["FIREWALLD_POLICY"]
             )
             self.logger.debug(f"Current Settings for Policy:\n{orig_policy}")
 
-            rich_rules = [
-                f'rule family=ipv4 destination address="{command}" drop']
+            rich_rules = []
             if orig_policy.get('rich_rules', None):
                 rich_rules.extend(
                     [str(x) for x in list(orig_policy['rich_rules'])])
+
+            new_rule = f'rule family=ipv4 destination address="{command}" drop'
+
+            if new_rule in rich_rules:
+                self.logger.info("Rule already exists")
+                continue
+
+            rich_rules.append(new_rule)
 
             change_policy = {
                 'rich_rules': rich_rules
@@ -64,5 +73,8 @@ class Commander(LoggingObject, Thread):
                 change_policy
             )
             self.logger.info("Added new rule")
+
+            self.logger.info("Sending notification to users")
+            notify(command)
 
         self.logger.info("Commander has Stopped")
